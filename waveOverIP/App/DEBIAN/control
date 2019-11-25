@@ -1,0 +1,11 @@
+Package: wave-over-udp
+Version: 1.0-1
+Section: base
+Priority: optional
+Architecture: armhf
+Depends: libasound2-dev (>= 1.0.28)
+Maintainer: Hoa Le <lvhoa58@gmail.com>
+Description: WaveOverUdp
+ .
+ ..
+ ...

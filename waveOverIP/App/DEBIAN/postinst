@@ -1,0 +1,48 @@
+#!/bin/bash
+read -p "Enter Your Hostname: Pi?"  my_pi_id
+echo "Pi$my_pi_id" > /etc/hostname
+if [ $(grep -cx -E "127\.0\.1\.1\s+.*" /etc/hosts) -eq 0 ]; then
+    echo "127.0.1.1       Pi$my_pi_id" >> /etc/hosts
+else
+    sed -i -E "s/127\.0\.1\.1\s+.*/127.0.1.1       $hostname/g" /etc/hosts
+fi
+
+for pi_id in {1..8}
+do
+    if [ "$my_pi_id" != "$pi_id" ]; then
+        read -p "Enter Pi$pi_id IP: 192.168.7.10($pi_id?)"  pi_ip
+        if [ -z "$pi_ip" ]; then
+            pi_ip="$pi_id"
+        fi
+        if [ $(grep -cx -E "[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\s+Pi$pi_id" /etc/hosts) -eq 0 ]; then
+            echo "192.168.7.10$pi_ip       Pi$pi_id" >> /etc/hosts
+        else
+            sed -i -E "s/[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\s+Pi$pi_id/192.168.7.10$pi_ip       Pi$pi_id/g" /etc/hosts
+        fi
+    fi
+done
+
+static_ip="192.168.7.10$my_pi_id"
+
+read -p "Enter Your Netmask IP (Default 255.255.255.0): "  netmask
+if [ -z "$netmask" ]; then
+    netmask="255.255.255.0"
+fi
+
+cat > /etc/network/interfaces.d/ari_wifi  <<EOL
+auto eth0
+iface eth0 inet static
+        address ${static_ip}
+        netmask ${netmask}
+EOL
+
+chmod +x /usr/bin/wave*
+
+systemctl enable audio_send_udp
+systemctl enable audio_play_udp
+
+echo "Build WiringOP"
+
+cd /tmp/WiringOP-Zero && ./build
+
+echo "Setup done!! Please reboot for take effected!"

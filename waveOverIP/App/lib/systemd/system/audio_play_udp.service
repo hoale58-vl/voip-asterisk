@@ -1,0 +1,14 @@
+[Unit]
+Description=VoIP OrangePi Play UDP
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/wavePlayUDP
+Restart=always
+KillSignal=SIGQUIT
+
+[Install]
+WantedBy=multi-user.target
