@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
 			if((dataRecv = recvfrom(server, dataRecvBuffer, dataRecvBufferSize, 0, (struct sockaddr *)&srcaddr, &addrlen)) <= 0)
 				break;
 			char* ipString = inet_ntoa(srcaddr.sin_addr);
-			printf("%s is send, it has gpio is %d, %d\n",  ipString, hostLookupTable[ipString], listOutputGpio[hostLookupTable[ipString]]);
+			// printf("%s is send, it has gpio is %d, %d\n",  ipString, hostLookupTable[ipString], listOutputGpio[hostLookupTable[ipString]]);
 			digitalWrite(listOutputGpio[hostLookupTable[ipString]], HIGH) ;
 			writeAudio(hWaveOut, dataRecvBuffer, dataRecv/chunkSize, chunkSize);
 

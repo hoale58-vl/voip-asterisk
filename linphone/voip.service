@@ -1,0 +1,15 @@
+[Unit]
+Description=VoIP OrangePi
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/usr/local/voip
+ExecStart=/usr/bin/python main_gpio_conference.py
+Restart=always
+KillSignal=SIGQUIT
+
+[Install]
+WantedBy=multi-user.target
